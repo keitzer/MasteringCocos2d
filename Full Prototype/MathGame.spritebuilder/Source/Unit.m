@@ -248,10 +248,7 @@ NSString *const kTurnCompletedNotification = @"unitDragComplete";
 			//if it's not in the same place... aka, a valid move taken
 			if (!(gridX == self.gridPos.x && gridY == self.gridPos.y))
 			{
-				//self.gridPos = ccp(gridX, gridY);
-				//self.unitValue++;
 				self.direction = self.dragDirection;
-				//[self updateLabel];
 				
 				//pass the unit through to the MainScene
 				[[NSNotificationCenter defaultCenter] postNotificationName:kTurnCompletedNotification object:nil userInfo:@{@"unit" : self}];

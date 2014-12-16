@@ -48,12 +48,8 @@
 		
 		CCButton *btnMenu = [CCButton buttonWithTitle:@"" spriteFrame:[CCSpriteFrame frameWithImageNamed:@"btnMenu.png"]];
 		[btnMenu setTarget:self selector:@selector(goToMenu)];
-		//btnMenu.position = ccp(winSize.width * 0.1, winSize.height * 0.1);
-		//[self addChild:btnMenu];
 		
 		CCButton *btnRestart = [CCButton buttonWithTitle:@"" spriteFrame:[CCSpriteFrame frameWithImageNamed:@"btnRestart.png"]];
-		//btnRestart.position = ccp(winSize.width * 0.1, winSize.height * 0.1);
-		//[self addChild:btnRestart];
 		
 		CCLayoutBox *layoutButtons = [[CCLayoutBox alloc] init];
 		[layoutButtons addChild:btnRestart];
@@ -80,11 +76,8 @@
 		[arrFriendlies addObject:friendly];
 		
 		arrEnemies = [[NSMutableArray alloc] init];
-		//[arrEnemies addObject:enemy];
 		
 		[self spawnNewEnemy];
-		
-		[self setUserInteractionEnabled:YES];
 		
 		numTotalScore = 1;
 		numTurnSurvived = 0;
@@ -396,14 +389,6 @@
 -(void)endGame
 {
 	[[CCDirector sharedDirector] replaceScene:[MenuScene scene]];
-}
-
-#pragma mark - Touch Methods
-
--(void)touchBegan:(CCTouch *)touch withEvent:(CCTouchEvent *)event
-{
-	//CGPoint pos = [touch locationInNode:self];
-	//NSLog(@"ccp(%f,%f)", pos.x / winSize.width, pos.y / winSize.height);
 }
 
 -(void)dealloc

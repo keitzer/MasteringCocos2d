@@ -227,10 +227,11 @@ NSString *const kUnitDragCancel = @"unitDragCancelled";
 
 -(void)touchEnded:(CCTouch *)touch withEvent:(CCTouchEvent *)event
 {
+	CGPoint touchPos = [touch locationInNode:self.parent];
+	
 	//if it was being dragged in the first place
 	if (self.isBeingDragged)
 	{
-		CGPoint touchPos = [touch locationInNode:self.parent];
 		//stop the dragging
 		self.isBeingDragged = NO;
 		

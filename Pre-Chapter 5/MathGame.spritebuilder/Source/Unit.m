@@ -201,7 +201,6 @@ NSString *const kUnitDragCancel = @"unitDragCancelled";
 	if (!self.isBeingDragged && ccpDistance(touchPos, self.touchDownPos) > 20)
 	{
 		self.isBeingDragged = YES;
-		self.previousTouchPos = self.touchDownPos;
 		
 		CGPoint difference = ccp(touchPos.x - self.touchDownPos.x, touchPos.y - self.touchDownPos.y);
 		//determine direction

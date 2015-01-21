@@ -33,6 +33,7 @@ NS_ENUM(NSInteger, UnitDirection)
 @property (nonatomic, assign) BOOL isBeingDragged;
 @property (nonatomic, assign) CGPoint touchDownPos;
 @property (nonatomic, assign) enum UnitDirection dragDirection;
+@property (nonatomic, assign) NSInteger gridWidth;
 
 +(Unit*)friendlyUnit;
 +(Unit*)enemyUnitWithNumber:(NSInteger)value atGridPosition:(CGPoint)pos;

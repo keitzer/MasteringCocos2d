@@ -34,10 +34,6 @@ NS_ENUM(NSInteger, UnitDirection)
 @property (nonatomic, assign) CGPoint touchDownPos;
 @property (nonatomic, assign) enum UnitDirection dragDirection;
 
-//add these:
-@property (nonatomic, assign) CGPoint previousTouchPos;
-@property (nonatomic, assign) NSInteger gridWidth;
-
 +(Unit*)friendlyUnit;
 +(Unit*)enemyUnitWithNumber:(NSInteger)value atGridPosition:(CGPoint)pos;
 -(void)updateLabel;

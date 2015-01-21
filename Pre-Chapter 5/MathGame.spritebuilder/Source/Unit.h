@@ -9,6 +9,7 @@
 #import "CCSprite.h"
 
 FOUNDATION_EXPORT NSString *const kTurnCompletedNotification;
+FOUNDATION_EXPORT NSString *const kUnitDragCancel;
 
 NS_ENUM(NSInteger, UnitDirection)
 {
@@ -33,10 +34,15 @@ NS_ENUM(NSInteger, UnitDirection)
 @property (nonatomic, assign) CGPoint touchDownPos;
 @property (nonatomic, assign) enum UnitDirection dragDirection;
 
+//add these:
+@property (nonatomic, assign) CGPoint previousTouchPos;
+@property (nonatomic, assign) NSInteger gridWidth;
+
 +(Unit*)friendlyUnit;
 +(Unit*)enemyUnitWithNumber:(NSInteger)value atGridPosition:(CGPoint)pos;
 -(void)updateLabel;
 -(BOOL)moveUnitDidIncreaseNumber;
 -(void)setDirectionBasedOnWall:(NSInteger)wall;
 -(void)setNewDirectionForEnemy;
+
 @end

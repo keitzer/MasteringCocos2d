@@ -3,6 +3,12 @@
 #import "Unit.h"
 #import "GameOverScene.h"
 
+NSString *const DataHighScores = @"highScores";
+NSString *const DictTotalScore = @"totalScore";
+NSString *const DictTurnsSurvived = @"turnsSurvived";
+NSString *const DictUnitsKilled = @"unitsKilled";
+NSString *const DictHighScoreIndex = @"hsIndex";
+
 @implementation MainScene
 
 +(CCScene *)scene
@@ -49,12 +55,9 @@
 		
 		CCButton *btnMenu = [CCButton buttonWithTitle:@"" spriteFrame:[CCSpriteFrame frameWithImageNamed:@"btnMenu.png"]];
 		[btnMenu setTarget:self selector:@selector(goToMenu)];
-		//btnMenu.position = ccp(winSize.width * 0.1, winSize.height * 0.1);
-		//[self addChild:btnMenu];
-		
+
 		CCButton *btnRestart = [CCButton buttonWithTitle:@"" spriteFrame:[CCSpriteFrame frameWithImageNamed:@"btnRestart.png"]];
-		//btnRestart.position = ccp(winSize.width * 0.1, winSize.height * 0.1);
-		//[self addChild:btnRestart];
+		[btnRestart setTarget:self selector:@selector(restartGame)];
 		
 		CCLayoutBox *layoutButtons = [[CCLayoutBox alloc] init];
 		[layoutButtons addChild:btnRestart];
@@ -74,7 +77,7 @@
 			board.scale = 0.8;
 		
 		Unit *friendly = [Unit friendlyUnit];
-		friendly.position = [self getPositionForGridCoord:friendly.gridPos];
+		friendly.position = [MainScene getPositionForGridCoord:friendly.gridPos];
 		[self addChild:friendly];
 		
 		arrFriendlies = [[NSMutableArray alloc] init];
@@ -122,7 +125,7 @@
 	
 	NSInteger unitValue = (arc4random() % 4) + 1; //need to factor in turn count somehow...
 	Unit *newEnemy = [Unit enemyUnitWithNumber:unitValue atGridPosition:ccp(xPos, yPos)];
-	newEnemy.position = [self getPositionForGridCoord:newEnemy.gridPos];
+	newEnemy.position = [MainScene getPositionForGridCoord:newEnemy.gridPos];
 	[newEnemy setDirectionBasedOnWall:wall];
 	[self addChild:newEnemy];
 	[arrEnemies addObject:newEnemy];
@@ -140,10 +143,11 @@
 	[[CCDirector sharedDirector] replaceScene:[MainScene scene]];
 }
 
--(CGPoint)getPositionForGridCoord:(CGPoint)pos
++(CGPoint)getPositionForGridCoord:(CGPoint)pos
 {
 	CGPoint screenPos;
 	Unit *u = [Unit friendlyUnit];
+	CGSize winSize = [[CCDirector sharedDirector] viewSize];
 	
 	CGFloat borderValue = .6f;
 	
@@ -157,7 +161,7 @@
 {
 	NSDictionary *userInfo = [notif userInfo];
 	Unit *u = (Unit*)userInfo[@"unit"];
-	u.position = [self getPositionForGridCoord:u.gridPos];
+	u.position = [MainScene getPositionForGridCoord:u.gridPos];
 	
 	[[OALSimpleAudio sharedInstance] playEffect:@"moveUnit.mp3"];
 	
@@ -200,7 +204,7 @@
 	}
 	
 	Unit *newFriendly = [Unit friendlyUnit];
-	newFriendly.position = [self getPositionForGridCoord:newFriendly.gridPos];
+	newFriendly.position = [MainScene getPositionForGridCoord:newFriendly.gridPos];
 	[self addChild:newFriendly];
 	[arrFriendlies addObject:newFriendly];
 	++numTotalScore;
@@ -229,7 +233,7 @@
 			++numTotalScore;
 		}
 		
-		friendly.position = [self getPositionForGridCoord:friendly.gridPos];
+		friendly.position = [MainScene getPositionForGridCoord:friendly.gridPos];
 		
 		if (friendly.unitValue == 0)
 		{
@@ -263,7 +267,7 @@
 	for (Unit *enemy in arrEnemies)
 	{
 		[enemy moveUnitDidIncreaseNumber];
-		enemy.position = [self getPositionForGridCoord:enemy.gridPos];
+		enemy.position = [MainScene getPositionForGridCoord:enemy.gridPos];
 		[enemy setNewDirectionForEnemy];
 		
 		if (![enemy.name isEqualToString:@"dead"])
@@ -492,7 +496,11 @@
 
 -(void)endGame
 {
-	//[[CCDirector sharedDirector] replaceScene:[GameOverScene scene]];
+	NSDictionary *scoreData = @{ DictTotalScore : @(numTotalScore),
+								 DictTurnsSurvived : @(numTurnSurvived),
+								 DictUnitsKilled : @(numUnitsKilled)};
+	
+	[[CCDirector sharedDirector] replaceScene:[GameOverScene sceneWithScoreData:scoreData]];
 }
 
 #pragma mark - Touch Methods

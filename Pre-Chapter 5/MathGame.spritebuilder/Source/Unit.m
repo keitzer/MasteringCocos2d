@@ -7,8 +7,10 @@
 //
 
 #import "Unit.h"
+#import "MainScene.h"
 
 NSString *const kTurnCompletedNotification = @"unitDragComplete";
+NSString *const kUnitDragCancel = @"unitDragCancelled";
 
 @implementation Unit
 
@@ -33,6 +35,12 @@ NSString *const kTurnCompletedNotification = @"unitDragComplete";
 		self.lblValue.scale = 1.5;
 		self.lblValue.position = ccp(self.contentSize.width/2, self.contentSize.height/1.75);
 		[self addChild:self.lblValue];
+		
+		self.dragDirection = DirStanding;
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repositionUnitToGridPos) name:kUnitDragCancel object:nil];
+		
+		self.gridWidth = self.boundingBox.size.width / 2;
 	}
 	return self;
 }
@@ -174,21 +182,26 @@ NSString *const kTurnCompletedNotification = @"unitDragComplete";
 	}
 }
 
+-(void)repositionUnitToGridPos
+{
+	self.position = [MainScene getPositionForGridCoord:self.gridPos];
+}
+
 #pragma mark - Touch Methods
 
 -(void)touchBegan:(CCTouch *)touch withEvent:(CCTouchEvent *)event
 {
-	self.touchDownPos = [touch locationInNode:self];
-	self.dragDirection = DirUp;
+	self.touchDownPos = [touch locationInNode:self.parent];
 }
 
 -(void)touchMoved:(CCTouch *)touch withEvent:(CCTouchEvent *)event
 {
-	CGPoint touchPos = [touch locationInNode:self];
+	CGPoint touchPos = [touch locationInNode:self.parent];
 	//if it's not already being dragged and the touch is dragged far enough away...
-	if (!self.isBeingDragged && ccpDistance(touchPos, self.touchDownPos) > 15)
+	if (!self.isBeingDragged && ccpDistance(touchPos, self.touchDownPos) > 20)
 	{
 		self.isBeingDragged = YES;
+		self.previousTouchPos = self.touchDownPos;
 		
 		CGPoint difference = ccp(touchPos.x - self.touchDownPos.x, touchPos.y - self.touchDownPos.y);
 		//determine direction
@@ -218,7 +231,7 @@ NSString *const kTurnCompletedNotification = @"unitDragComplete";
 	//if it was being dragged in the first place
 	if (self.isBeingDragged)
 	{
-		CGPoint touchPos = [touch locationInNode:self];
+		CGPoint touchPos = [touch locationInNode:self.parent];
 		//stop the dragging
 		self.isBeingDragged = NO;
 		
@@ -259,6 +272,19 @@ NSString *const kTurnCompletedNotification = @"unitDragComplete";
 				[[NSNotificationCenter defaultCenter] postNotificationName:kTurnCompletedNotification object:nil userInfo:@{@"unit" : self}];
 			}
 		}
+		//else... dist NOT > gridWidth/2
+		else
+		{
+			//[self repositionUnitToGridPos];
+			[[NSNotificationCenter defaultCenter] postNotificationName:kUnitDragCancel object:nil];
+		}
+		
+		self.dragDirection = DirStanding;
 	}
+}
+
+-(void)dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 @end

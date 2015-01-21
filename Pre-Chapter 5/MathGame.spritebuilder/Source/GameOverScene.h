@@ -11,11 +11,10 @@
 @interface GameOverScene : CCScene
 {
 	CGSize winSize;
+	NSArray *arrScores;
+	NSInteger highScoreIndex;
 }
 
-@property (nonatomic, assign) NSInteger numUnitsKilled;
-@property (nonatomic, assign) NSInteger numTotalScore;
-@property (nonatomic, assign) NSInteger numTurnsSurvived;
-
 +(CCScene*)scene;
++(CCScene*)sceneWithScoreData:(NSDictionary*)dict;
 @end

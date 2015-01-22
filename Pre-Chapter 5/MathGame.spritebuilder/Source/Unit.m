@@ -40,7 +40,7 @@ NSString *const kUnitDragCancel = @"unitDragCancelled";
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repositionUnitToGridPos) name:kUnitDragCancel object:nil];
 		
-		self.gridWidth = self.boundingBox.size.width / 2;
+		self.gridWidth = self.boundingBox.size.width;
 	}
 	return self;
 }

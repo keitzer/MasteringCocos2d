@@ -94,7 +94,7 @@ NSString *const DictHighScoreIndex = @"hsIndex";
 		arrEnemies = [[NSMutableArray alloc] init];
 		//[arrEnemies addObject:enemy];
 		
-		[self spawnNewEnemy];
+		[self spawnNewEnemy:[self getRandomEnemy]];
 		
 		[self setUserInteractionEnabled:YES];
 		
@@ -107,7 +107,7 @@ NSString *const DictHighScoreIndex = @"hsIndex";
 	return self;
 }
 
--(void)spawnNewEnemy
+-(Unit*)getRandomEnemy
 {
 	NSInteger xPos = 1;
 	NSInteger yPos = 1;
@@ -132,11 +132,20 @@ NSString *const DictHighScoreIndex = @"hsIndex";
 	}
 	
 	NSInteger unitValue = (arc4random() % 4) + 1; //need to factor in turn count somehow...
+	
 	Unit *newEnemy = [Unit enemyUnitWithNumber:unitValue atGridPosition:ccp(xPos, yPos)];
 	newEnemy.position = [MainScene getPositionForGridCoord:newEnemy.gridPos];
 	[newEnemy setDirectionBasedOnWall:wall];
-	[self addChild:newEnemy];
-	[arrEnemies addObject:newEnemy];
+	
+	return newEnemy;
+}
+
+-(void)spawnNewEnemy:(Unit*)enemy
+{
+	[self addChild:enemy];
+	[arrEnemies addObject:enemy];
+	
+	enemy.scale = 0;
 }
 
 -(void)goToMenu
@@ -192,7 +201,7 @@ NSString *const DictHighScoreIndex = @"hsIndex";
 	
 	if (numTurnSurvived % 3 == 0 || [arrEnemies count] == 0)
 	{
-		[self spawnNewEnemy];
+		[self spawnNewEnemy:[self getRandomEnemy]];
 		[self checkForAllCollisions];
 	}
 	
